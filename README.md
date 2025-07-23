@@ -1,5 +1,9 @@
 # timeApplication
-Simple app to test deployment via Terraform on AWS Fargate using Graviton.
+Simple app to test deployment via Terraform on AWS Fargate using Graviton.  This application simply returns the current
+time in response to a GET on the /time endpoint.  The infrastructure is deployed using Terraform and includes creation
+of an HTTPS-protected subdomain.  To test this, try
+
+`curls -s https://<SUBDOMAIN>.<DOMAIN>/time`
 
 ## Identity Center Login
 `aws sso login --profile deployer`
