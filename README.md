@@ -1,5 +1,5 @@
 # timeApplication
-Simple app to test deployment via Terraform on AWS
+Simple app to test deployment via Terraform on AWS Fargate using Graviton.
 
 ## Identity Center Login
 `aws sso login --profile deployer`
