@@ -33,7 +33,7 @@ echo "🔧 Building JAR..."
 ./mvnw clean package -DskipTests
 
 echo "🐳 Building Docker image..."
-docker buildx build --platform linux/amd64 -t ${REPO_NAME} . --load
+docker buildx build --platform linux/arm64 -t ${REPO_NAME} . --load
 
 echo "🔁 Tagging Docker image as ${ECR_URI}..."
 docker tag ${REPO_NAME}:latest ${ECR_URI}
@@ -94,9 +94,15 @@ if [[ "$STATUS" != "healthy" ]]; then
   exit 1
 fi
 
-# Test endpoint
+# Test endpoint #1
 echo "🌐 Testing app at: http://$LOAD_BALANCER_DOMAIN/time"
 curl -s "http://$LOAD_BALANCER_DOMAIN/time" || {
+  echo "❌ App did not respond correctly."
+  exit 1
+}
+
+echo "🌐 Testing app at: https://test.glebow.com/time"
+curl -s "https://test.glebow.com/time" || {
   echo "❌ App did not respond correctly."
   exit 1
 }
