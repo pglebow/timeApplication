@@ -10,6 +10,11 @@ variable "container_image" {
   description = "ECR image URL"
 }
 
-variable "certificate_arn" {
-  description = "ACM certificate ARN for HTTPS listener"
+variable "route53_zone_id" {
+  description = "Route53 Hosted Zone ID for DNS validation"
+  type        = string
+}
+variable "subdomain" {
+  description = "The subdomain prefix to use (e.g., 'test' for test.yourdomain.com)"
+  type        = string
 }

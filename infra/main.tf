@@ -105,7 +105,7 @@ resource "aws_lb_listener" "https" {
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = var.certificate_arn
+  certificate_arn   = aws_acm_certificate.https_cert.arn
 
   default_action {
     type             = "forward"
@@ -115,6 +115,44 @@ resource "aws_lb_listener" "https" {
 
 resource "aws_ecs_cluster" "main" {
   name = "time-api-cluster"
+}
+
+locals {
+  cert_validation = tolist(aws_acm_certificate.https_cert.domain_validation_options)[0]
+}
+
+resource "aws_acm_certificate" "https_cert" {
+  domain_name       = "${var.subdomain}.glebow.com"
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_route53_record" "alb_alias" {
+  zone_id = var.route53_zone_id
+  name    = var.subdomain
+  type    = "A"
+
+  alias {
+    name                   = aws_lb.main.dns_name
+    zone_id                = aws_lb.main.zone_id
+    evaluate_target_health = true
+  }
+}
+
+resource "aws_route53_record" "cert_validation" {
+  name    = local.cert_validation.resource_record_name
+  type    = local.cert_validation.resource_record_type
+  zone_id = var.route53_zone_id
+  records = [local.cert_validation.resource_record_value]
+  ttl     = 60
+}
+
+resource "aws_acm_certificate_validation" "https_cert_validation" {
+  certificate_arn         = aws_acm_certificate.https_cert.arn
+  validation_record_fqdns = [aws_route53_record.cert_validation.fqdn]
 }
 
 resource "aws_iam_role" "ecs_task_execution" {
