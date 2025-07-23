@@ -14,6 +14,13 @@ INFRA_DIR="infra"
 SCRIPT_PATH=$(dirname "$(readlink -f "$0")")
 TF_VARS=${SCRIPT_PATH}/terraform.tfvars
 
+if [[ "$1" == "--destroy" ]]; then
+  echo "🧹 Destroying infrastructure only..."
+  cd $INFRA_DIR
+  AWS_PROFILE=$AWS_PROFILE terraform destroy -auto-approve -var-file=${TF_VARS}
+  exit 0
+fi
+
 echo "🧹 Checking for previous infra..."
 cd $INFRA_DIR
 if [ -f terraform.tfstate ]; then
