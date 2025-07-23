@@ -5,6 +5,16 @@ of an HTTPS-protected subdomain.  To test this, try
 
 `curls -s https://<SUBDOMAIN>.<DOMAIN>/time`
 
+## Development Process
+I'm very comfortable developing with Spring and Java, but less so with Fargate and Terraform.
+I heavily used ChatGPT to help me develop those aspects of the project.  CODEX was tried but seemed
+less useful that working with ChatGPT more directly.
+
+### Lessons Learned
+1. Learning through Q&A and working examples was useful and got me this project in a few hours.
+2. CODEX seemed to struggle and I preferred using ChatGPT.  Specifically, it sometimes generated incorrect code, e.g., excluding files in a .Dockerignore that were later used.
+3. Generation of the permission set for the deployment user was through trial and error.  I would have liked something more comprehensive from the start.  I could have chosen to read through the docs, but wanted to see how far I could get with ChatGPT.
+
 ## Identity Center Login
 `aws sso login --profile deployer`
 
